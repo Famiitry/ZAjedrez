@@ -1,14 +1,16 @@
 package Tablero;
 
+//import TableroAjedrez;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
+//import java.util.List;
 public class FormularioAjedrez extends JFrame {
     private JPanel panelControles;
     private JPanel panelTablero;
     private JButton[][] casillas = new JButton[8][8];
+    private TableroAjedrez tablero;
     //private JComboBox<String> jComboBox1;
     private ImageIcon iconoReina = new ImageIcon(getClass().getResource("/resources/Reina.png"));
     private ImageIcon iconoPeón = new ImageIcon(getClass().getResource("/resources/Peón.png"));
@@ -16,7 +18,9 @@ public class FormularioAjedrez extends JFrame {
     private ImageIcon iconoAlfilNegro = new ImageIcon(getClass().getResource("/resources/AlfilNegro.png"));
     private ImageIcon iconoTorre = new ImageIcon(getClass().getResource("/resources/Torre.png"));
     private ImageIcon iconoCaballo = new ImageIcon(getClass().getResource("/resources/Caballo.png"));
-    
+    //private JComboBox<String> jComboBox1;
+    private JTextField campoFila; 
+    private JTextField campoColumna;    
 public FormularioAjedrez() {
         initComponents();
         setTitle("Ajedrez GUI");
@@ -28,6 +32,7 @@ public FormularioAjedrez() {
         panelControles.setPreferredSize(new Dimension(200, getHeight()));
         add(panelControles, BorderLayout.EAST);
         setVisible(true);
+        tablero = new TableroAjedrez();
     }
 private void crearTablero() {
         panelTablero = new JPanel(new GridLayout(8, 8));
@@ -37,25 +42,24 @@ private void crearTablero() {
                 casillas[i][j].setPreferredSize(new Dimension(50, 50));
                 // Alternar colores de las casillas
                 if ((i + j) % 2 == 0) {
-                    casillas[i][j].setBackground(Color.WHITE);
+                    casillas[i][j].setBackground(Color.YELLOW);
                 } else {
-                    casillas[i][j].setBackground(Color.GRAY);
+                    casillas[i][j].setBackground(Color.BLACK);
                 }
                 panelTablero.add(casillas[i][j]);
             }
         }
         panelTablero.setPreferredSize(new Dimension(600, 600));
         add(panelTablero, BorderLayout.CENTER);
-        panelTablero.setBounds(0, 0, 600, 600);
+        panelTablero.setBounds(130, 130, 600, 600);
         panelTablero.setOpaque(false);
-        //all
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.add(panelTablero, JLayeredPane.DEFAULT_LAYER);
         add(layeredPane, BorderLayout.CENTER);
     }
 private void crearPanelControles() {
         panelControles = new JPanel();
-        panelControles.setLayout(new BoxLayout(panelControles, BoxLayout.Y_AXIS));       
+        panelControles.setLayout(new BoxLayout(panelControles, BoxLayout.Y_AXIS)); 
         jComboBox1 = new JComboBox<>();
         jComboBox1.addItem("Reina");
         jComboBox1.addItem("Alfil");
@@ -63,73 +67,39 @@ private void crearPanelControles() {
         jComboBox1.addItem("Peón");
         jComboBox1.addItem("Torre");
         jComboBox1.addItem("Caballo");
-        
-        JTextField campoFila = new JTextField();
-        JTextField campoColumna = new JTextField();
+        panelControles.add(jComboBox1);       
+        campoFila = new JTextField();
+        campoColumna = new JTextField();
         panelControles.add(campoFila);
         panelControles.add(campoColumna);
-
     // Añadiendo el ItemListener al JComboBox
-        jComboBox1.addItemListener(new ItemListener(){
-        @Override
-        public void itemStateChanged(ItemEvent e) {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                String item = (String) e.getItem();
-                try {
-                    int Fila = Integer.parseInt(campoFila.getText());
-                    int Columna = Integer.parseInt(campoColumna.getText());
-                    colocarFicha(Fila, Columna, item);
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Por favor, ingresa números válidos para la fila y la columna.");
-                }
-            }
-        }
-    });
-/**        
-        jComboBox1.addItemListener(new ItemListener(){
+        jComboBox1.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     String item = (String) e.getItem();
-                    // Aquí debes obtener la fila y columna de alguna manera, por ejemplo, usando JTextField
-                    int Fila =;
-                    int Columna =;
-                    
-                    colocarFicha(Fila, Columna, item);
-                    switch (item) {
-                        case "Reina":
-                            // Función para la Reina
-                            break;
-                        case "Alfil":
-                            // Función para el Alfil
-                            break;
-                        case "Alfil Negro":
-                            // Función para el Alfil Negro
-                            break;
-                        case "Peón":
-                            // Función para el Peón
-                            break;
-                        case "Torre":
-                            // Función para la Torre
-                            break;
-                        case "Caballo":
-                            // Función para el Caballo
-                            break;
+                    try {
+                        int fila = Integer.parseInt(campoFila.getText());
+                        int columna = Integer.parseInt(campoColumna.getText());
+                        colocarFicha(fila, columna, item);
+                        
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Por favor, ingresa números válidos para la fila y la columna.");
                     }
                 }
             }
         });
-*/
-        // Añadir el JComboBox al panel de controles
+    }
+    
+        /** Añadir el JComboBox al panel de controles
         panelControles.add(jComboBox1);
         JButton botonStart = new JButton("Start");
         JButton botonRestart = new JButton("Restart");
         panelControles.add(botonStart);
-        panelControles.add(botonRestart);
-        // Añadir más controles si es necesario
-
+        panelControles.add(botonRestart);       
         add(panelControles, BorderLayout.EAST);
     }
+        */
 // Método para colocar una ficha en el tablero
     public void colocarFicha(int fila, int columna, String ficha) {
         JButton casilla = casillas[fila][columna];
@@ -164,17 +134,22 @@ private void crearPanelControles() {
                 panelTablero.revalidate();
                 panelTablero.repaint();
                 break;
- 
         }
+        Icon icono = null;
+        if (icono != null) {
+        casilla.setIcon(icono);
         panelTablero.revalidate();
         panelTablero.repaint();
     }
-        
+        panelTablero.revalidate();
+        panelTablero.repaint();
+        // Mostrar movimientos posibles
+    }       
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
@@ -184,18 +159,20 @@ private void crearPanelControles() {
         jTextField2 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new java.awt.CardLayout());
+        setBackground(new java.awt.Color(153, 102, 0));
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jPanel1.setLayout(new java.awt.GridLayout(8, 8));
-        getContentPane().add(jPanel1, "card2");
+        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel2.setEnabled(false);
+        jPanel2.setFocusable(false);
 
         jLabel1.setText("Escoge una ficha");
         jPanel2.add(jLabel1);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Reina", "Caballo", "Peon", "Alfil", "AlfilNegro" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Choose one", "Reina", "Caballo", "Peon", "Alfil", "AlfilNegro" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -224,6 +201,7 @@ private void crearPanelControles() {
         });
         jPanel2.add(jTextField2);
 
+        jButton2.setBackground(new java.awt.Color(255, 204, 204));
         jButton2.setText("Start  👀");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -232,6 +210,7 @@ private void crearPanelControles() {
         });
         jPanel2.add(jButton2);
 
+        jButton1.setBackground(new java.awt.Color(204, 204, 255));
         jButton1.setText("Restart 😁");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -240,7 +219,11 @@ private void crearPanelControles() {
         });
         jPanel2.add(jButton1);
 
-        getContentPane().add(jPanel2, "card3");
+        getContentPane().add(jPanel2, new java.awt.GridBagConstraints());
+
+        jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jPanel1.setLayout(new java.awt.GridLayout(8, 8));
+        getContentPane().add(jPanel1, new java.awt.GridBagConstraints());
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -265,6 +248,14 @@ private void crearPanelControles() {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
+    String fichaSeleccionada = (String) jComboBox1.getSelectedItem();
+    try {
+        int fila = Integer.parseInt(campoFila.getText());
+        int columna = Integer.parseInt(campoColumna.getText());
+        colocarFicha(fila, columna, fichaSeleccionada);
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(null, "Ingresa valores numéricos válidos para fila y columna.");
+    }    
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
@@ -313,4 +304,10 @@ private void crearPanelControles() {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
+
+    private static class TableroAjedrez {
+
+        public TableroAjedrez() {
+        }
+    }
 }
